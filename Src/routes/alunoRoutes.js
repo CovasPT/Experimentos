@@ -2,15 +2,18 @@ const express = require('express');
 const router = express.Router();
 const alunoController = require('../controllers/alunoController');
 
-// <---------------- Alterado por gemini: Definição das Rotas RESTful
-// GET /api/alunos      -> Lista todos
-// POST /api/alunos     -> Cria um novo
-// PUT /api/alunos/:id  -> Atualiza (precisa do ID)
-// DELETE /api/alunos/:id -> Apaga (precisa do ID)
+// <---------------- Alterado por gemini: Importar o nosso "Porteiro"
+const verifyToken = require('../middlewares/authMiddleware');
 
+// <---------------- Alterado por gemini: Rotas Protegidas
+// Adicionámos 'verifyToken' como segundo argumento nas rotas perigosas.
+
+// Qualquer um pode ver a lista (Público)
 router.get('/', alunoController.listarAlunos);
-router.post('/', alunoController.criarAluno);
-router.put('/:id', alunoController.atualizarAluno);
-router.delete('/:id', alunoController.apagarAluno);
+
+// SÓ ADMINS (com token) podem mexer nos dados
+router.post('/', verifyToken, alunoController.criarAluno);
+router.put('/:id', verifyToken, alunoController.atualizarAluno);
+router.delete('/:id', verifyToken, alunoController.apagarAluno);
 
 module.exports = router;
