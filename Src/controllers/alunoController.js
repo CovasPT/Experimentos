@@ -16,7 +16,8 @@ const alunoController = {
     // <---------------- Alterado por gemini: Criar (CREATE)
     criarAluno: async (req, res) => {
         try {
-            const novoAluno = req.body;
+            console.log('Body recebido:', req.body); // Debug: Verifica no terminal o que está a chegar
+            const novoAluno = req.body || {};
 
             // Validação básica (Boa prática: nunca confiar nos dados do utilizador)
             if (!novoAluno.nome || !novoAluno.email) {
@@ -38,7 +39,7 @@ const alunoController = {
     atualizarAluno: async (req, res) => {
         try {
             const { id } = req.params;
-            const dadosAtualizados = req.body;
+            const dadosAtualizados = req.body || {}; // Proteção contra undefined
             
             const alterou = await AlunoModel.update(id, dadosAtualizados);
 
